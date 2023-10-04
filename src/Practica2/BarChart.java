@@ -14,6 +14,7 @@ import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.renderer.xy.XYSplineRenderer;
 //import org.jfree.chart.util.TableOrder;
 import org.jfree.data.category.CategoryDataset;
+import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.xy.XYSeriesCollection;
 
 import javax.swing.*;
@@ -22,22 +23,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import org.jfree.ui.RefineryUtilities;
 
-public class BarChart extends JFrame {
-    public BarChart(String title, CategoryDataset dataset) {
-        super(title);
-
-        JFreeChart barChart = createBarChart(dataset);
-
-        ChartPanel chartPanel = new ChartPanel(barChart);
-        chartPanel.setPreferredSize(new Dimension(800, 600));
-        setContentPane(chartPanel);
-
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+public class BarChart extends Chart {
+    public BarChart(String title, DefaultCategoryDataset dataset) {
+        super(title , dataset);
     }
 
-    private JFreeChart createBarChart(CategoryDataset dataset) {
+    public JFreeChart createDataset() {
         return ChartFactory.createBarChart(
-                "Gráfico de Barras",
+                getTitle(),
                 "Categorías",
                 "Valores",
                 dataset,
@@ -47,5 +40,4 @@ public class BarChart extends JFrame {
                 false
         );
     }
-
 }

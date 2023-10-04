@@ -20,6 +20,11 @@ public class Main {
         // Crear un campo de texto para que el usuario ingrese la URL
         JTextField urlField = new JTextField(30); // 30 caracteres de ancho
 
+        // Primera columna
+        JLabel labelColumna = new JLabel("Que columnas desea comparar:");
+        JTextField fielColumna1 = new JTextField(3);
+        JTextField fielColumna2 = new JTextField(3);
+
         // Crear un botón para enviar la URL
         JButton submitButton = new JButton("Enviar");
 
@@ -35,21 +40,23 @@ public class Main {
             System.out.println("Result:" + contents[1]);
             System.out.println("Result:" + contents[2]);
             System.out.println("Result:" + contents.length);
+
             ReaderCSV readerCSV = new ReaderCSV(contents);
-            DefaultCategoryDataset dataset = readerCSV.createDataset(2, 4);
+            int c1 = Integer.parseInt(fielColumna1.getText());
+            int c2 = Integer.parseInt(fielColumna2.getText());
+            DefaultCategoryDataset dataset = readerCSV.createDataset(c1, c2);
             // readerCSV.printDataset(dataset);
 
-            SwingUtilities.invokeLater(() -> {
-                BarChart demo = new BarChart("Gráfico de Barras Demo", dataset);
-                demo.pack();
-                RefineryUtilities.centerFrameOnScreen(demo);
-                demo.setVisible(true);
-            });
+            new BarChart("Gráfico de Barras", dataset).display();
+            new LineChart("Gráfico de Lineas", dataset).display();
         });
 
         // Agregar los componentes al panel
         panel.add(label);
         panel.add(urlField);
+        panel.add(labelColumna);
+        panel.add(fielColumna1);
+        panel.add(fielColumna2);
         panel.add(submitButton);
 
         // Agregar el panel al frame
