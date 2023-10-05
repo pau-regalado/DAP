@@ -35,39 +35,25 @@ public class ReaderCSV {
         return values;
     }
 
-    public DefaultCategoryDataset createDataset(int xAxis, int yAxis) {
+    public DefaultCategoryDataset createDataset(int xAxis, int yAxis, int zAxis) {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
         ArrayList<String> xValues = getValuesNonRepeated(xAxis);
         ArrayList<String> yValues = getValuesNonRepeated(yAxis);
+        ArrayList<String> zValues = getValuesNonRepeated(zAxis);
 
-        for (String yValue : yValues) {
-            for (String xValue : xValues) {
-                int count = 0;
-                for (int i = 0; i < getSize(); i++) {
-                    if (getValue(i, xAxis).equals(xValue) && getValue(i, yAxis).equals(yValue)) {
-                        count++;
-                    }
-                }
-                dataset.addValue(count, yValue, xValue);
-            }
+        // Assuming xValues, yValues, and zValues have the same size.
+        int size = Math.min(Math.min(xValues.size(), yValues.size()), zValues.size());
+
+        for (int i = 0; i < size; i++) {
+            String xValue = xValues.get(i);
+            String yValue = yValues.get(i);
+            String zValue = zValues.get(i);
+
+            // Assuming you want to use xValue as the data point.
+            dataset.addValue(Double.parseDouble(xValue), yValue, zValue);
         }
 
         return dataset;
-    }
-
-    public void printDataset(DefaultCategoryDataset dataset) {
-        int rowCount = dataset.getRowCount();
-        int colCount = dataset.getColumnCount();
-
-        for (int row = 0; row < rowCount; row++) {
-            for (int col = 0; col < colCount; col++) {
-                String rowKey = dataset.getRowKey(row).toString();
-                String colKey = dataset.getColumnKey(col).toString();
-                double value = dataset.getValue(rowKey, colKey).doubleValue();
-
-                System.out.println("Row: " + rowKey + ", Column: " + colKey + ", Value: " + value);
-            }
-        }
     }
 }

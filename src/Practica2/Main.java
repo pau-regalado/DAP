@@ -31,22 +31,18 @@ public class Main {
         // Agregar un ActionListener al botón para manejar el evento de clic
         submitButton.addActionListener(e -> {
             String url = urlField.getText(); // Obtener la URL ingresada por el usuario
-            // Aquí puedes hacer lo que desees con la URL, como descargar el archivo CSV
-            url = "https://cnecovid.isciii.es/covid19/resources/casos_hosp_uci_def_sexo_edad_provres_60_mas.csv";
-            String url1 = "https://cnecovid.isciii.es/covid19/resources/hosp_uci_def_sexo_edad_provres_todas_edades.csv";
-            System.out.println("URL ingresada: " + url1);
-            String[] contents = DownloadFile.downloadFromURL(url1).split("\n");
-            System.out.println("Result:" + contents[0]);
-            System.out.println("Result:" + contents[1]);
-            System.out.println("Result:" + contents[2]);
-            System.out.println("Result:" + contents.length);
+            // url = "https://cnecovid.isciii.es/covid19/resources/casos_hosp_uci_def_sexo_edad_provres_60_mas.csv";
+            // String url1 = "https://cnecovid.isciii.es/covid19/resources/hosp_uci_def_sexo_edad_provres_todas_edades.csv";
+            url = "https://cnecovid.isciii.es/covid19/resources/casos_diagnostico_provincia.csv";
+            System.out.println("URL ingresada: " + url);
+            String[] contents = DownloadFile.downloadFromURL(url).split("\n");
 
-            ReaderCSV readerCSV = new ReaderCSV(contents);
+            Parser parser = new CovidParser(contents);
             int c1 = Integer.parseInt(fielColumna1.getText());
             int c2 = Integer.parseInt(fielColumna2.getText());
-            DefaultCategoryDataset dataset = readerCSV.createDataset(c1, c2);
+            // DefaultCategoryDataset dataset = readerCSV.createDataset(c1, c2, 5);
             // readerCSV.printDataset(dataset);
-
+            DefaultCategoryDataset dataset = parser.constructDatabase();
             new BarChart("Gráfico de Barras", dataset).display();
             new LineChart("Gráfico de Lineas", dataset).display();
         });
