@@ -1,9 +1,10 @@
 package Practica2;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import org.jfree.data.category.DefaultCategoryDataset;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 enum CovidTupleAttr {
     NUM_CASOS,
@@ -12,34 +13,25 @@ enum CovidTupleAttr {
 }
 
 public class CovidParser extends Parser{
-        public CovidParser (String[] content) {
-            this.parse(content);
-        }
-        @Override
-        public DefaultCategoryDataset constructDatabase() {
-            DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+    public CovidParser (String[] content) {
+        this.parse(content);
+    }
+    @Override
+    public DefaultCategoryDataset constructDatabase() {
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        for (int i = 0; i < this.records.size(); i++) {
+            try {
+                double xValue = Double.parseDouble(this.records.get(i).get(2));
+                double yValue = Double.parseDouble(this.records.get(i).get(3));
+                double zValue = Double.parseDouble(this.records.get(i).get(4));
+                String label = this.records.get(i).get(1);
 
-            for (ArrayList<String> record : this.records) {
-                // Make sure the record has the same number of values as headers
-                if (record.size() == this.headers.size()) {
-                    for (int i = 0; i < this.headers.size(); i++) {
-                        String value = record.get(i);
-                        String header = this.headers.get(i);
-
-                        try {
-                            System.out.println("v: " + value + " " + i + " : " + Integer.parseInt(value));
-                            int doubleValue = Integer.parseInt(value);
-                            dataset.addValue(doubleValue, header, "");
-                        } catch (NumberFormatException e) {
-                            // Handle the case where the value cannot be parsed as a double
-                            // You can print an error message or take appropriate action here
-                            dataset.addValue(1, header, "");
-                        }
-                    }
-                }
+                dataset.addValue(xValue, this.headers.get(2), label);
+                dataset.addValue(yValue, this.headers.get(3), label);
+                dataset.addValue(zValue, this.headers.get(4), label);
+            } catch (NumberFormatException e) {
             }
-
+        }
             return dataset;
         }
-
 }

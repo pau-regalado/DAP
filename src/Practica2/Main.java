@@ -15,45 +15,39 @@ public class Main {
         JPanel panel = new JPanel();
 
         // Crear un label para indicar al usuario qué ingresar
-        JLabel label = new JLabel("Introduce la URL del archivo CSV:");
+        JLabel label = new JLabel("Seleccione la fuente de datos que quiera graficar\n");
 
-        // Crear un campo de texto para que el usuario ingrese la URL
-        JTextField urlField = new JTextField(30); // 30 caracteres de ancho
+        JButton covidButton = new JButton("Covid");
+        JButton hospitalButton = new JButton("Hospital (it may take a while)");
 
-        // Primera columna
-        JLabel labelColumna = new JLabel("Que columnas desea comparar:");
-        JTextField fielColumna1 = new JTextField(3);
-        JTextField fielColumna2 = new JTextField(3);
-
-        // Crear un botón para enviar la URL
-        JButton submitButton = new JButton("Enviar");
-
-        // Agregar un ActionListener al botón para manejar el evento de clic
-        submitButton.addActionListener(e -> {
-            String url = urlField.getText(); // Obtener la URL ingresada por el usuario
-            // url = "https://cnecovid.isciii.es/covid19/resources/casos_hosp_uci_def_sexo_edad_provres_60_mas.csv";
-            // String url1 = "https://cnecovid.isciii.es/covid19/resources/hosp_uci_def_sexo_edad_provres_todas_edades.csv";
-            url = "https://cnecovid.isciii.es/covid19/resources/casos_diagnostico_provincia.csv";
-            System.out.println("URL ingresada: " + url);
+        hospitalButton.addActionListener(e -> {
+            String url = "https://cnecovid.isciii.es/covid19/resources/casos_hosp_uci_def_sexo_edad_provres_60_mas.csv";
             String[] contents = DownloadFile.downloadFromURL(url).split("\n");
 
-            Parser parser = new CovidParser(contents);
-            int c1 = Integer.parseInt(fielColumna1.getText());
-            int c2 = Integer.parseInt(fielColumna2.getText());
-            // DefaultCategoryDataset dataset = readerCSV.createDataset(c1, c2, 5);
-            // readerCSV.printDataset(dataset);
+            Parser parser = new HospitalParser(contents);
+
             DefaultCategoryDataset dataset = parser.constructDatabase();
-            new BarChart("Gráfico de Barras", dataset).display();
-            new LineChart("Gráfico de Lineas", dataset).display();
+            new BarChart("Gráfico de Barras de Covid", dataset).display();
+            new LineChart("Gráfico de Lineas de Covid", dataset).display();
+        });
+
+        covidButton.addActionListener(e -> {
+            String url = "https://cnecovid.isciii.es/covid19/resources/casos_diagnostico_provincia.csv";
+            String[] contents = DownloadFile.downloadFromURL(url).split("\n");
+            Parser parser = new HospitalParser(contents);
+            DefaultCategoryDataset dataset = parser.constructDatabase();
+            new BarChart("Gráfico de Barras de Hospital", dataset).display();
+            new LineChart("Gráfico de Lineas de Hospital", dataset).display();
         });
 
         // Agregar los componentes al panel
         panel.add(label);
-        panel.add(urlField);
-        panel.add(labelColumna);
-        panel.add(fielColumna1);
-        panel.add(fielColumna2);
-        panel.add(submitButton);
+
+        JSeparator separator = new JSeparator(SwingConstants.HORIZONTAL);
+        panel.add(separator);
+
+        panel.add(covidButton);
+        panel.add(hospitalButton);
 
         // Agregar el panel al frame
         frame.add(panel);
